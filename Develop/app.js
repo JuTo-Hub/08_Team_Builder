@@ -4,6 +4,7 @@ const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
+let employees = [];
 
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
@@ -73,6 +74,14 @@ const managerQs =[
         name: "officeNumber",
     },
 ]
+const askAgain = [
+    {
+        type: 'confirm',
+        message: 'Would you like to add another employee?',
+        name: "askAgain",
+        default: true,
+      },
+]
   function ask(){
       inquirer.prompt(startQ).then((answers) => {
           if(answers.employeeType==="Intern"){
@@ -86,18 +95,37 @@ const managerQs =[
     }
     function askIntern(){
         inquirer.prompt(internQs).then((answers =>{
-
+            employees.push(new Intern(answers.name, answers.id, answers.email, answers.school));
+            askAddAnother();
         }))
     }
     function askEngineer(){
         inquirer.prompt(engineerQs).then((answers =>{
-
+            employees.push(new Engineer(answers.name, answers.id, answers.email, answers.github));
+            askAddAnother();
         }))
     }
     function askManager(){
         inquirer.prompt(managerQs).then((answers =>{
-
+            employees.push(new Manager(answers.name, answers.id, answers.email, answers.officeNumber));
+            askAddAnother();
         }))
+    }
+    function askAddAnother(){
+        inquirer.prompt(askAgain).then((answers) =>{
+        if(answers.askAgain){
+            ask();
+        } else {
+            console.log("Employee Data Entry Complete, Please Check The Employee Card!")
+            console.log(employees);
+            renderEmployees()
+        }})
+    }
+    function renderEmployees(){
+        if (!fs.existsSync(OUTPUT_DIR)){
+            fs.mkdirSync(OUTPUT_DIR);
+        }
+        fs.writeFile(outputPath, render(employees), null, (err)=> {console.log(err)});
     }
 ask();
 
