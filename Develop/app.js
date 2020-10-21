@@ -13,6 +13,93 @@ const render = require("./lib/htmlRenderer");
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
+const EmpType = [
+    {
+   type : "Intern",
+    },
+    {
+    type : "Engineer",
+    },
+    {
+    type : "Manager",
+    },
+];
+const startQ =[
+    {
+        type: "list",
+        message: "Please choose your employee type",
+        name: "employeeType",
+        choices: EmpType.map((o) => o.type)
+    },
+]
+const employeeQs =[
+    {
+      type: "input",
+      message: "Please insert your first and last name.",
+      name: "name"
+    },
+    {
+      type: "input",
+      message: "Please insert your ID number.",
+      name: "id"
+  },
+  {
+      type: "input",
+      message: "Please insert your email.",
+      name: "email"
+  },
+];
+const internQs =[
+    ...employeeQs,
+    {
+        type: "input",
+        message: "Please insert your school name",
+        name: "school",
+    },
+]
+const engineerQs =[
+    ...employeeQs,
+    {
+        type: "input",
+        message: "Please insert your GitHub username",
+        name: "github",
+    },
+]
+const managerQs =[
+    ...employeeQs,
+    {
+        type: "input",
+        message: "Please insert your office number",
+        name: "officeNumber",
+    },
+]
+  function ask(){
+      inquirer.prompt(startQ).then((answers) => {
+          if(answers.employeeType==="Intern"){
+              askIntern();
+          } if(answers.employeeType==="Engineer"){
+              askEngineer();
+          } if(answers.employeeType==="Manager"){
+              askManager()
+          }
+      })
+    }
+    function askIntern(){
+        inquirer.prompt(internQs).then((answers =>{
+
+        }))
+    }
+    function askEngineer(){
+        inquirer.prompt(engineerQs).then((answers =>{
+
+        }))
+    }
+    function askManager(){
+        inquirer.prompt(managerQs).then((answers =>{
+
+        }))
+    }
+ask();
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
